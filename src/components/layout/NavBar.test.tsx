@@ -3,15 +3,11 @@ import { render, screen } from '@testing-library/react';
 
 // Mock flowbite-react to avoid JSDOM issues
 jest.mock('flowbite-react', () => ({
-  Navbar: Object.assign(
-    ({ children }: { children: React.ReactNode }) => <nav>{children}</nav>,
-    {
-      Brand: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-      Toggle: () => <button aria-label="Toggle navigation" />,
-      Collapse: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-      Link: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
-    }
-  ),
+  Navbar: ({ children }: { children: React.ReactNode }) => <nav>{children}</nav>,
+  NavbarBrand: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  NavbarToggle: () => <button aria-label="Toggle navigation" />,
+  NavbarCollapse: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  NavbarLink: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
   Button: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
     <button {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>{children}</button>
   ),

@@ -1,14 +1,14 @@
 'use client';
 
-import { Navbar, Button } from 'flowbite-react';
+import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle, Button } from 'flowbite-react';
 
 export function NavBar() {
   return (
     <div className="sticky top-0 z-50 border-b border-brand-border bg-white">
       <Navbar fluid>
-        <Navbar.Brand href="/">
+        <NavbarBrand href="/">
           <img src="/full-logo.svg" alt="Sype" className="h-8" />
-        </Navbar.Brand>
+        </NavbarBrand>
         <div className="flex items-center gap-2 md:order-2">
           <Button color="light" pill>
             Log in
@@ -20,22 +20,22 @@ export function NavBar() {
           >
             Sign up
           </Button>
-          <Navbar.Toggle />
+          <NavbarToggle />
         </div>
-        <Navbar.Collapse>
-          <Navbar.Link href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
+        <NavbarCollapse>
+          <NavbarLink href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
             How it works
-          </Navbar.Link>
-          <Navbar.Link href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
+          </NavbarLink>
+          <NavbarLink href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
             Schools
-          </Navbar.Link>
-          <Navbar.Link href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
+          </NavbarLink>
+          <NavbarLink href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
             Pricing
-          </Navbar.Link>
-          <Navbar.Link href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
+          </NavbarLink>
+          <NavbarLink href="#" className="text-sm text-gray-600 hover:text-brand-orange transition-colors">
             Help
-          </Navbar.Link>
-        </Navbar.Collapse>
+          </NavbarLink>
+        </NavbarCollapse>
       </Navbar>
     </div>
   );
