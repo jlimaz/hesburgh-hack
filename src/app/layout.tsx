@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Sype',
+  title: 'Fluxo',
   description: 'Pay US university tuition in your home currency',
   icons: {
     icon: '/favicon.ico',
