@@ -1,18 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-// Mock flowbite-react to avoid JSDOM issues
-jest.mock('flowbite-react', () => ({
-  Navbar: ({ children }: { children: React.ReactNode }) => <nav>{children}</nav>,
-  NavbarBrand: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  NavbarToggle: () => <button aria-label="Toggle navigation" />,
-  NavbarCollapse: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  NavbarLink: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
-  Button: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
-    <button {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>{children}</button>
-  ),
-}));
-
 import { NavBar } from './NavBar';
 
 describe('NavBar', () => {
@@ -21,28 +9,39 @@ describe('NavBar', () => {
     expect(screen.getByAltText('Sype')).toBeInTheDocument();
   });
 
-  it('renders all four nav links', () => {
+  it('renders Log in link', () => {
     render(<NavBar />);
-    expect(screen.getByText('How it works')).toBeInTheDocument();
-    expect(screen.getByText('Schools')).toBeInTheDocument();
-    expect(screen.getByText('Pricing')).toBeInTheDocument();
-    expect(screen.getByText('Help')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /log in/i })).toHaveAttribute('href', '/login');
   });
 
-  it('renders Log in button', () => {
+  it('renders Sign up link', () => {
     render(<NavBar />);
-    expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /sign up/i })).toHaveAttribute('href', '/signup');
   });
 
-  it('renders Sign up button', () => {
-    render(<NavBar />);
-    expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument();
-  });
-
-  it('has sticky top-0 positioning on the outer wrapper', () => {
+  it('has sticky top-0 positioning on the header', () => {
     const { container } = render(<NavBar />);
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper.className).toContain('sticky');
-    expect(wrapper.className).toContain('top-0');
+    const header = container.querySelector('header');
+    expect(header).not.toBeNull();
+    expect(header!.className).toContain('sticky');
+    expect(header!.className).toContain('top-0');
+  });
+
+  it('uses a squircle floating nav darker than the page background', () => {
+    const { container } = render(<NavBar />);
+    const nav = container.querySelector('nav');
+    expect(nav).not.toBeNull();
+    expect(nav!.className).toMatch(/rounded-\[/);
+    expect(nav!.className).toMatch(/bg-brand-ink\/\[/);
+    expect(nav!.className).toContain('backdrop-blur-md');
+  });
+
+  it('aligns with landing content width and horizontal padding', () => {
+    const { container } = render(<NavBar />);
+    const shell = container.querySelector('header > div');
+    expect(shell).not.toBeNull();
+    expect(shell!.className).toContain('max-w-7xl');
+    expect(shell!.className).toContain('px-6');
+    expect(shell!.className).toContain('sm:px-8');
   });
 });

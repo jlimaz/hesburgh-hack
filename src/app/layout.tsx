@@ -17,6 +17,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Sype',
   description: 'Pay US university tuition in your home currency',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
