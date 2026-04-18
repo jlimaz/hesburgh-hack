@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { CircleFlag } from 'react-circle-flags';
 import { NavBar } from '@/components/layout/NavBar';
 
@@ -224,8 +225,8 @@ export default function Home() {
 
             {/* CTA buttons */}
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-              <button
-                type="button"
+              <Link
+                href="/signup"
                 className="group inline-flex h-14 items-center justify-center gap-2 rounded-full bg-brand-orange px-8 text-base font-semibold text-white shadow-[0_8px_24px_-8px_rgba(244,106,53,0.55)] transition-all duration-200 hover:bg-brand-orangeHover hover:shadow-[0_12px_32px_-8px_rgba(244,106,53,0.65)] active:translate-y-px"
               >
                 Start a transfer
@@ -235,7 +236,7 @@ export default function Home() {
                 >
                   →
                 </span>
-              </button>
+              </Link>
               <a
                 href="#how-it-works"
                 className="inline-flex h-14 items-center justify-center rounded-full border border-brand-ink/15 bg-transparent px-8 text-base font-semibold text-brand-ink transition-colors hover:border-brand-ink/40 hover:bg-brand-ink/[0.03]"
