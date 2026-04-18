@@ -14,6 +14,7 @@ export function NavBar() {
             Log in
           </Button>
           <Button
+            color="light"
             pill
             className="bg-brand-orange text-white hover:bg-brand-orangeHover border-0"
           >
