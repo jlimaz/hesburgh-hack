@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -85,30 +86,13 @@ export function PixPaymentStep() {
               className="relative mt-6 flex aspect-square w-full max-w-[280px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-brand-border bg-white p-4 text-left transition hover:border-brand-orange/60 hover:ring-2 hover:ring-brand-orange/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
               aria-label="Simulate PIX payment: tap to continue to confirmation"
             >
-              <svg
-                viewBox="0 0 100 100"
-                className="h-full w-full max-h-[220px] text-brand-ink pointer-events-none"
-                role="img"
-                aria-hidden
-              >
-                <title>PIX QR code placeholder</title>
-                {Array.from({ length: 100 }).map((_, i) => {
-                  const row = Math.floor(i / 10);
-                  const col = i % 10;
-                  if ((row * 17 + col * 13) % 3 !== 0) return null;
-                  return (
-                    <rect
-                      key={i}
-                      x={4 + col * 9.2}
-                      y={4 + row * 9.2}
-                      width={7.5}
-                      height={7.5}
-                      rx={1}
-                      className="fill-current"
-                    />
-                  );
-                })}
-              </svg>
+              <Image
+                src="/qrcode-mock.svg"
+                alt=""
+                width={285}
+                height={285}
+                className="h-auto w-full max-h-[220px] object-contain pointer-events-none"
+              />
             </button>
             <p className="mt-4 text-sm leading-relaxed text-brand-muted">
               Tap the QR code to simulate payment and continue (demo).
