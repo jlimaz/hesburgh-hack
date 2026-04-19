@@ -1,3 +1,25 @@
+@import '../../node_modules/flowbite-datepicker/dist/css/datepicker-bulma.min.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * Flowbite datepicker: hide() adds Tailwind's .hidden but keeps .active.
+ * Bulma skin uses .datepicker.active { display: block }, which wins over .hidden alone,
+ * so the popover stayed visible. Force closed state when both classes are present.
+ */
+.datepicker.active.hidden {
+  display: none !important;
+}
+
+/* Flowbite datepicker (Bulma CSS build): match brand accent */
+.datepicker-cell.selected,
+.datepicker-cell.selected:hover {
+  background-color: #f46a35 !important;
+  color: #fff !important;
+}
+.datepicker-cell.today:not(.selected) {
+  background-color: rgba(244, 106, 53, 0.2) !important;
+  color: #1a1a1a !important;
+}
