@@ -1,8 +1,4 @@
-# Fluxo
-
-> Stablecoin payments for international students — faster, cheaper, borderless.
-
----
+![Fluxo banner](documentantio/assets/banner-docs.png)
 
 ## Table of Contents
 
