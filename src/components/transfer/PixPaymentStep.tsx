@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PIX_TRANSFER_DEMO } from '@/lib/transfer-demo';
 
 const INITIAL_SECONDS = 5 * 60;
@@ -14,9 +14,13 @@ function formatCountdown(totalSec: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+const PAYMENT_CONFIRM_MS = 900;
+
 export function PixPaymentStep() {
   const router = useRouter();
   const [secondsLeft, setSecondsLeft] = useState(INITIAL_SECONDS);
+  const [isConfirmingPayment, setIsConfirmingPayment] = useState(false);
+  const confirmTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const t = window.setInterval(() => {
@@ -25,6 +29,22 @@ export function PixPaymentStep() {
     return () => window.clearInterval(t);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (confirmTimeoutRef.current !== null) {
+        window.clearTimeout(confirmTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  function handleSimulatePixPayment() {
+    if (isConfirmingPayment) return;
+    setIsConfirmingPayment(true);
+    confirmTimeoutRef.current = window.setTimeout(() => {
+      router.push('/transfer/confirm');
+    }, PAYMENT_CONFIRM_MS);
+  }
+
   const labelClass =
     'text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-muted';
   const valueClass = 'mt-1 font-body text-lg font-semibold text-brand-ink tabular-nums';
@@ -32,7 +52,25 @@ export function PixPaymentStep() {
     'rounded-2xl border border-brand-borderDeep/60 bg-white p-6 shadow-[0_1px_0_rgba(26,26,26,0.04)] sm:p-7';
 
   return (
-    <div className="space-y-8">
+    <>
+      {isConfirmingPayment ? (
+        <div
+          className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-5 bg-brand-cream px-6"
+          role="status"
+          aria-live="polite"
+          aria-label="Confirming PIX payment"
+        >
+          <span
+            className="h-10 w-10 rounded-full border-[3px] border-brand-border border-t-brand-orange animate-spin"
+            aria-hidden
+          />
+          <p className="text-center font-body text-base font-semibold text-brand-ink">
+            Confirming payment…
+          </p>
+        </div>
+      ) : null}
+
+      <div className="space-y-8">
       <div>
         <h1 className="font-body text-3xl font-semibold tracking-tight text-brand-ink sm:text-4xl sm:leading-tight">
           PIX Payment — Brazil
@@ -82,9 +120,15 @@ export function PixPaymentStep() {
             <h2 className="font-body text-lg font-semibold text-brand-ink">PIX QR code</h2>
             <button
               type="button"
-              onClick={() => router.push('/transfer/confirm')}
-              className="relative mt-6 flex aspect-square w-full max-w-[280px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-brand-border bg-white p-4 text-left transition hover:border-brand-orange/60 hover:ring-2 hover:ring-brand-orange/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
-              aria-label="Simulate PIX payment: tap to continue to confirmation"
+              onClick={handleSimulatePixPayment}
+              disabled={isConfirmingPayment}
+              aria-busy={isConfirmingPayment}
+              aria-label={
+                isConfirmingPayment
+                  ? 'Confirming PIX payment'
+                  : 'Simulate PIX payment: tap to continue to confirmation'
+              }
+              className="relative mt-6 flex aspect-square w-full max-w-[280px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-brand-border bg-white p-4 text-left transition hover:border-brand-orange/60 hover:ring-2 hover:ring-brand-orange/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-wait"
             >
               <Image
                 src="/qrcode-mock.svg"
@@ -162,5 +206,6 @@ export function PixPaymentStep() {
         </p>
       </div>
     </div>
+    </>
   );
 }
