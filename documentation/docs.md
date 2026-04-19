@@ -1,71 +1,122 @@
 ![Fluxo banner](assets/banner-docs.png)
+> A stablecoin-powered financial platform for international students — built on PIX and USDC.
+
+---
 
 ## Table of Contents
 
-1. [Overview](#overview)
+1. [Introduction](#introduction)
 2. [Problem](#problem)
 3. [Solution](#solution)
 4. [How It Works](#how-it-works)
 5. [Tech Stack](#tech-stack)
-6. [Architecture](#architecture)
-7. [Getting Started](#getting-started)
-8. [Team](#team)
+6. [Team](#team)
 
 ---
 
-## Overview
+## Introduction
 
-**Fluxo** is a stablecoin-powered payment platform that enables international students to pay their university tuition without the friction of traditional wire transfers — no hidden fees, no 5-7 business day delays, no unfavorable exchange rates.
+Every year, thousands of Brazilian students leave home with a dream — to study abroad, build a career, and return with skills that make a difference. What they don't expect is to spend their first weeks in the US navigating a financial system that was never built for them.
 
-Students connect their wallet, select their institution, and pay in USDC or USDT. The university receives the funds in their preferred currency. That's it.
+Opening a bank account without a Social Security Number is a bureaucratic nightmare. Receiving money from family takes days. Each transfer eats into already tight budgets through fees that would be unacceptable in any other context. And when something goes wrong — a missed payment, a medical expense, a deposit due tomorrow — there is no safety net. No credit card. No overdraft. No backup.
+
+**Fluxo** was built to solve exactly this. By combining Brazil's PIX instant payment infrastructure with USDC stablecoin rails on Base (a low-cost Ethereum L2), we eliminate the middlemen, the delays, and the fees that have made cross-border student finance unnecessarily painful for decades.
+
+This is not a crypto product dressed up for students. This is a student product that happens to use the best financial technology available. The blockchain is the engine under the hood — students just experience a fast, simple, trustworthy neobank.
 
 ---
 
 ## Problem
 
-International students face a broken payment experience when paying tuition abroad:
+### A system that profits from vulnerability
 
-- **High fees** — wire transfers charge $25–$50 flat, plus 1–3% FX markup
-- **Slow settlement** — international transfers take 3–7 business days
-- **Exchange rate risk** — rates fluctuate between initiation and settlement
-- **Complexity** — students need SWIFT codes, intermediary banks, and manual form-filling
-- **No transparency** — it's hard to know when (or if) the payment arrived
+International students are one of the most financially constrained populations in the US. On an F-1 visa, they cannot legally work beyond limited campus roles. They have no US credit history, no collateral, and no access to credit cards or personal loans. They are entirely dependent on money their families send from home — and every time that money crosses a border, the system takes a cut.
 
-For the ~6 million international students in the US alone, this is a recurring, stressful, and expensive problem.
+Brazilian families sending money to students face a gauntlet: IOF tax, the bank's FX spread, international wire fees on the sending end, and sometimes receiving fees on the US side. Families can lose up to **6% of every transfer** — not for any real service, but because the infrastructure is old and there is no competitive pressure to improve it.
+
+Beyond cost, there's the waiting. SWIFT transfers take 2–5 business days. For a student facing a rent deadline or medical emergency, that delay isn't an inconvenience. It's a crisis.
+
+### The scale
+
+| Metric | Data |
+|---|---|
+| Annual flow from international students into the US | ~$50 billion |
+| Brazilian students in the US | 17,000+ |
+| Average transfer cost | ~12% all-in |
+| UN SDG 2030 target for remittances | 3% |
+| Students on F-1 who cannot legally work | ~100% |
+
+This is a structural failure affecting hundreds of thousands of students and their families — measurable in billions of dollars lost to friction every year.
 
 ---
 
 ## Solution
 
-Fluxo replaces the wire transfer with a stablecoin payment rail:
+Fluxo replaces the wire transfer with a stablecoin payment rail.
 
 | | Traditional Wire | Fluxo |
 |---|---|---|
-| Fee | $25–$50 + FX markup | < $1 |
-| Settlement | 3–7 business days | Minutes |
-| Transparency | Opaque | On-chain, trackable |
-| Complexity | High | Connect wallet, confirm, done |
+| Cost | Up to 6–12% all-in | < 1.5% |
+| Speed | 2–5 business days | ~10 minutes |
+| Transparency | Opaque | On-chain receipt |
+| Availability | Banking hours | 24/7 |
 
-By using stablecoins (USDC/USDT), students avoid currency volatility while still transacting on a blockchain — getting the best of both worlds.
+The student pays in BRL via PIX from their Brazilian bank. Fluxo converts that to USDC on-chain and deposits USD directly into their US bank account. No crypto knowledge required — it works like any neobank transfer.
 
 ---
 
 ## How It Works
 
-### Student Flow
+### The Flow
 
-1. **Sign up** — student creates an account and verifies their student ID
-2. **Select institution** — choose from the list of partner universities
-3. **Enter amount** — enter tuition amount due (in USD or local currency)
-4. **Connect wallet** — connect via MetaMask or WalletConnect
-5. **Confirm payment** — transaction is sent on-chain in USDC/USDT
-6. **Receipt issued** — student receives a payment confirmation with tx hash
+```
+Student (Brazil)
+    │
+    │  1. Signs up & verifies identity (KYC)
+    │  2. Inputs US bank account details
+    │  3. Gets a live BRL → USD exchange quote
+    │  4. Pays in BRL via PIX
+    │
+    ▼
+Fluxo Backend
+    │
+    │  5. Receives PIX webhook confirmation
+    │  6. Converts BRL → USDC on Base (L2)
+    │  7. Offramps USDC → USD via Circle
+    │
+    ▼
+Student's US Bank Account 🇺🇸
+```
 
-### University Flow
+### Step by step
 
-1. Institution registers on Fluxo and provides their receiving wallet or bank details
-2. Payments arrive in stablecoin form and can be auto-converted to fiat if needed
-3. University dashboard shows incoming payments in real time
+**1. Signup & KYC**
+The student creates an account and verifies their identity using their CPF and a government-issued document. Required for AML compliance on cross-border transfers. Identity verification is handled by **Sumsub**.
+
+**2. US Bank Account Input**
+The student enters their personal US bank account (routing + account number). Fluxo validates it via **Plaid**. This is where they'll receive their USD — Fluxo sends to the student, not to any institution.
+
+**3. Exchange Quote**
+Before paying, the student sees a transparent breakdown:
+
+```
+You send:       R$ 25.430,00
+Exchange rate:  1 USD = R$ 5.086
+Fees:           R$ 12,00 (~$2.36)
+You receive:    $5.000,00 USD → Chase ••••4821
+Time:           ~10 minutes
+```
+
+The rate is locked for 5 minutes. If PIX confirmation doesn't arrive in time, the quote refreshes.
+
+**4. PIX Payment**
+The student scans a dynamic QR code generated by **Swap**, Fluxo's Brazilian payment partner. PIX is instant, free, and available 24/7. Fluxo's backend receives a signed webhook on confirmation.
+
+**5. Stablecoin Conversion**
+Once BRL is confirmed, Fluxo releases the equivalent USDC from its treasury on Base. In production, this uses BRZ (a BRL-pegged stablecoin by Transfero) swapped to USDC via Uniswap — fully on-chain, fully auditable.
+
+**6. USD Settlement**
+Fluxo redeems the USDC 1:1 for USD via Circle's Payments API and sends an ACH transfer to the student's bank account. The student receives a confirmation email with the on-chain transaction hash as proof of transfer.
 
 ---
 
@@ -74,65 +125,15 @@ By using stablecoins (USDC/USDT), students avoid currency volatility while still
 | Layer | Technology |
 |---|---|
 | Frontend | Next.js, Tailwind CSS |
-| Backend | Node.js / Python (FastAPI) |
-| Blockchain | Base (EVM-compatible L2) |
+| Backend | Node.js |
+| Blockchain | Base (Ethereum L2) |
 | Stablecoin | USDC (Circle) |
-| Wallet Integration | WalletConnect, MetaMask SDK |
+| BRL Bridge | BRZ (Transfero) |
+| PIX Processing | Swap |
+| Offramp | Circle Payments API |
+| Bank Verification | Plaid |
+| KYC | Sumsub |
 | Database | Supabase |
-| Auth | Supabase Auth |
-
-> We chose **Base** as our chain for its low gas fees, EVM compatibility, and USDC native support via Circle.
-
----
-
-## Architecture
-
-```
-┌─────────────┐         ┌──────────────┐         ┌──────────────────┐
-│   Student   │ ──pay──▶│  Fluxo App   │──tx────▶│   Base Network   │
-│   (wallet)  │         │  (Next.js)   │         │  (USDC on-chain) │
-└─────────────┘         └──────┬───────┘         └────────┬─────────┘
-                               │                          │
-                         ┌─────▼──────┐           ┌──────▼──────────┐
-                         │  Supabase  │           │   University    │
-                         │  (users,   │           │   Wallet /      │
-                         │  records)  │           │   Fiat Offramp  │
-                         └────────────┘           └─────────────────┘
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- A wallet with USDC on Base (testnet for dev)
-- Supabase project
-
-### Installation
-
-```bash
-git clone https://github.com/your-org/fluxo
-cd fluxo
-npm install
-```
-
-### Environment Variables
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_wc_project_id
-```
-
-### Run Locally
-
-```bash
-npm run dev
-```
-
-App runs at `http://localhost:3000`.
 
 ---
 
@@ -140,10 +141,9 @@ App runs at `http://localhost:3000`.
 
 | Name | Role |
 |---|---|
-| [Your Name] | Full Stack / Blockchain |
-| [Teammate] | Frontend / Design |
-| [Teammate] | Backend / Smart Contracts |
+| José Lima | Full Stack / Blockchain |
+| Gabriel Marques | Full Stack / Product|
 
 ---
 
-*Built at Hesburgh Hackathon · [04/19/2026]*
+*Built at Hesburgh Hackathon · 2026*
