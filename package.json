@@ -10,8 +10,9 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "flowbite-datepicker": "^2.0.0",
+    "@heroicons/react": "^2.2.0",
     "flowbite": "^4.0.1",
+    "flowbite-datepicker": "^2.0.0",
     "flowbite-react": "^0.12.17",
     "next": "16.2.4",
     "postcss": "^8.5.10",
