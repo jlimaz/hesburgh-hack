@@ -4,7 +4,7 @@ export function AccountCreatedStep() {
   return (
     <div>
       <h1 className="font-body text-3xl font-semibold tracking-tight text-brand-ink sm:text-4xl sm:leading-tight">
-        Your account is ready
+        Your account is ready!
       </h1>
       <p className="mt-4 text-lg leading-relaxed text-brand-muted sm:text-xl">
         You&apos;re all set. Open your dashboard anytime, or continue to complete your exchange.
