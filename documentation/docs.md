@@ -1,4 +1,4 @@
-![Fluxo banner](documentantio/assets/banner-docs.png)
+![Fluxo banner](documentantion/assets/banner-docs.png)
 
 ## Table of Contents
 
